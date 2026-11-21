@@ -66,4 +66,4 @@ A lista concreta de rotas está nos casos de uso. Os atributos e as constraints 
 - Services concentram as regras de negócio, enquanto a apresentação permanece fina.
 - JWT stateless e same-origin, sem papéis de usuário (RNF05, RNF06).
 - Status derivado no lugar de agendador e constraint única para integridade do voto (RF10, RNF12).
-- Frontend modular com Bootstrap 5 servido junto da aplicação, consumindo apenas a API real (RNF02, RNF18).
+- Frontend modular com Bootstrap 5 via CDN, consumindo apenas a API real (RNF02, RNF18).

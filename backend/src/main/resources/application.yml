@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: census
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/census}
+    username: ${POSTGRES_USER:census}
+    password: "${SPRING_DATASOURCE_PASSWORD:?Defina SPRING_DATASOURCE_PASSWORD}"
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: ${DDL_AUTO:update}
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  jackson:
+    time-zone: UTC
+server:
+  port: ${SERVER_PORT:8080}

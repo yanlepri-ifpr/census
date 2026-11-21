@@ -28,14 +28,13 @@
 | `--color-border` | `#E2E8F0` | Bordas e divisores |
 | `--color-bg` | `#F8FAFC` | Fundo da página |
 | `--color-surface` | `#FFFFFF` | Cards, header e modal |
-| `--color-focus` | `#93C5FD` | Anel de foco |
 
-Badge “Encerrada” usa `--color-border` no fundo e `--color-text-muted` no texto. Contraste mínimo AA.
+Badge “Encerrada” usa `--color-border` no fundo e `--color-text-muted` no texto.
 
 ## Tipografia
 
 - Família: `Inter`, com fallback `system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif`.
-- Bootstrap 5 servido localmente, sem CDN.
+- Bootstrap 5.3.9 via jsDelivr, com SRI.
 - Sem CDN de fontes.
 
 | Elemento | Tamanho / linha | Peso |
@@ -84,17 +83,15 @@ Bootstrap 5 fornece grid, botões, formulários, card, badge, alerta, modal e pr
 - Foco em desktop; uma ação primária por tela; status sempre visível.
 - Botões desabilitados durante requisições para evitar duplo clique.
 - Validação inline nos campos e alerta global para erros de API.
-- Modal com foco inicial, foco preso, `Esc` para fechar e clique no backdrop.
+- Modal com `Esc` para fechar e clique no backdrop.
 - Datas em `pt-BR` em `America/Sao_Paulo`.
 - Texto de opções via `textContent`; nunca `innerHTML` com dados de usuário.
 - Sem tema escuro, sem animações longas e sem frameworks adicionais além do Bootstrap 5.
 
-## Acessibilidade e desktop
+## Desktop
 
 - Layout desktop a partir de 1200px; grid de 2 e 3 colunas; sem adaptação para celular.
 - Botões e campos com área clicável ampla; modal até 560px; sem rolagem horizontal.
-- HTML semântico, `lang="pt-BR"`, labels, `aria-describedby`, `aria-invalid`, `aria-live`.
-- Navegação por teclado, foco visível e resultados também em texto.
 
 ## Mensagens principais
 

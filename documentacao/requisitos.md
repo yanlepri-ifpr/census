@@ -31,7 +31,7 @@ Os casos de uso em `casos-uso.md` referenciam os IDs abaixo.
 | RNF05 | JWT | HS256 no `localStorage`, sem claim de papel. |
 | RNF06 | Same-origin | Frontend servido pelo Spring Boot, sem CORS. |
 | RNF07 | Layout desktop | Layout com Bootstrap 5, validado a partir de 1200px, sem suporte a celular. |
-| RNF08 | Acessibilidade | Contraste AA, labels, foco visível, teclado e `aria-live`. |
+| RNF08 | Idioma | Interface, mensagens e documentação em português. |
 | RNF09 | Consistência | Documentação acompanha a implementação. |
 | RNF10 | Histórico Git | Commits frequentes e distribuídos entre a dupla. |
 | RNF11 | Segredos | `JWT_SECRET` via ambiente; `.env` fora do Git. |
@@ -41,6 +41,6 @@ Os casos de uso em `casos-uso.md` referenciam os IDs abaixo.
 | RNF15 | Maven Wrapper | Build com `./mvnw`, sem Maven global. |
 | RNF16 | Docker Compose | Banco com healthcheck e volume persistente. |
 | RNF17 | Testes | Checklist manual; sem testes automatizados. |
-| RNF18 | Bootstrap 5 | Framework CSS servido localmente para layout e componentes desktop. |
+| RNF18 | Bootstrap 5 | Framework CSS via CDN para layout e componentes desktop. |
 | RNF19 | Manutenibilidade | Código por feature, nomes claros e DTOs. |
 | RNF20 | Desempenho | Listagem simples, sem paginação. |
