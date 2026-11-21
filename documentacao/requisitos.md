@@ -24,7 +24,7 @@ Os casos de uso em `casos-uso.md` referenciam os IDs abaixo.
 
 | ID | Requisito | Descrição |
 |---|---|---|
-| RNF01 | API REST | Spring Boot 3 e Java 21. |
+| RNF01 | API REST | Spring Boot 4.2 e Java 21. |
 | RNF02 | Frontend integrado | HTML/CSS/JS consomem a API real, sem mocks. |
 | RNF03 | PostgreSQL | Banco PostgreSQL 16 via Docker Compose. |
 | RNF04 | Senhas | BCrypt, política forte, hash nunca exposto. |
