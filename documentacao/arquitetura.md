@@ -41,6 +41,10 @@ O navegador carrega os arquivos estáticos servidos pelo Spring Boot e chama a A
 
 O backend converte DTOs em regras e persistência; o frontend converte respostas em estado de tela. Erros são padronizados no backend e explicados ao usuário no frontend. Datas trafegam em ISO-8601 UTC na API e são formatadas no cliente para o fuso local.
 
+## Configuração local
+
+O `docker-compose.yml` sobe o PostgreSQL 16 com healthcheck e volume nomeado. As variáveis vêm de `.env`, criado a partir de `.env.example`; segredos não são versionados.
+
 ## Modelo conceitual
 
 Três conceitos sustentam o domínio: usuário, enquete e voto. O usuário pode criar enquetes e votar. A enquete pertence a um criador, apresenta duas opções e possui um prazo. O voto liga um usuário a uma enquete e é único por participante. O status da enquete é uma visão derivada, não um estado persistido separadamente.
