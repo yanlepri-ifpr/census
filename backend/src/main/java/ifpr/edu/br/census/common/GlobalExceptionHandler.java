@@ -22,6 +22,16 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, "Dados inválidos", "Revise os campos enviados.", request, fieldErrors);
     }
 
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ApiError> handleEmailAlreadyExists(EmailAlreadyExistsException ex, HttpServletRequest request) {
+        return build(HttpStatus.CONFLICT, "Conflito", ex.getMessage(), request, Map.of("email", ex.getMessage()));
+    }
+
+    @ExceptionHandler(PasswordConfirmationException.class)
+    public ResponseEntity<ApiError> handlePasswordConfirmation(PasswordConfirmationException ex, HttpServletRequest request) {
+        return build(HttpStatus.BAD_REQUEST, "Dados inválidos", "Revise os campos enviados.", request, Map.of("passwordConfirmation", ex.getMessage()));
+    }
+
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ApiError> handleNotFound(NoResourceFoundException ex, HttpServletRequest request) {
         return build(HttpStatus.NOT_FOUND, "Não encontrado", "Recurso não encontrado.", request, Map.of());

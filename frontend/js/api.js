@@ -5,6 +5,9 @@ export async function apiFetch(path, options = {}) {
   if (!headers.has("Accept")) {
     headers.set("Accept", "application/json");
   }
+  if (options.body && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
 
   const response = await fetch(`${API_BASE}${path}`, { ...options, headers });
 

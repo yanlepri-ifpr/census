@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Criar conta - Census</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-yEPZ7jP9S0QKiUQ0m3jjsO4ProIW7wvR9gXkI7JOGa2XVsw53Yke2bsdkBbjmmiX" crossorigin="anonymous">
+  <link href="/css/styles.css" rel="stylesheet">
+</head>
+<body class="bg-body-tertiary">
+  <header class="bg-white border-bottom">
+    <div class="container py-3 d-flex align-items-center justify-content-between">
+      <a class="text-decoration-none fw-bold fs-4" href="/">Census</a>
+      <nav class="d-flex gap-3">
+        <a href="/">Enquetes</a>
+        <a href="/login.html">Entrar</a>
+        <a href="/register.html">Criar conta</a>
+      </nav>
+    </div>
+  </header>
+  <main class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-12 auth-card">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <h1 class="h1 mb-1">Criar conta</h1>
+            <p class="text-secondary small mb-4">Use 8 a 64 caracteres, com maiúscula, minúscula, número e símbolo.</p>
+            <div id="formAlert" class="alert alert-danger alert-error d-none"></div>
+            <form id="registerForm" novalidate>
+              <div class="mb-3">
+                <input type="text" id="nameInput" class="form-control" placeholder="Nome" autocomplete="name" maxlength="120">
+                <div id="nameError" class="invalid-feedback"></div>
+              </div>
+              <div class="mb-3">
+                <input type="email" id="emailInput" class="form-control" placeholder="E-mail" autocomplete="email" maxlength="255">
+                <div id="emailError" class="invalid-feedback"></div>
+              </div>
+              <div class="mb-3">
+                <input type="password" id="passwordInput" class="form-control" placeholder="Senha" autocomplete="new-password" maxlength="64">
+                <div id="passwordError" class="invalid-feedback"></div>
+              </div>
+              <div class="mb-4">
+                <input type="password" id="passwordConfirmationInput" class="form-control" placeholder="Confirmar senha" autocomplete="new-password" maxlength="64">
+                <div id="passwordConfirmationError" class="invalid-feedback"></div>
+              </div>
+              <button type="submit" id="submitButton" class="btn btn-primary w-100">Criar conta</button>
+            </form>
+            <p class="small text-secondary mt-3 mb-0">Já tem conta? <a href="/login.html">Entrar</a>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/js/bootstrap.bundle.min.js" integrity="sha384-WyOxWvTyr1QaMPfiPJSv76iReVthorl5uWlFtZPyK0IEB0hGzo9y5Bp9mYanr8Bu" crossorigin="anonymous"></script>
+  <script type="module" src="/js/register.js"></script>
+</body>
+</html>

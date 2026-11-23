@@ -63,8 +63,8 @@ Espaçamento em 4/8/12/16/24/32/48px; container máximo de 1100px; raios de 8px 
 
 - Card centralizado até 420px.
 - Login: e-mail, senha, links para cadastro e volta à lista.
-- Cadastro: nome, e-mail, senha, confirmação e política de senha.
-- Alertas de erro e sucesso.
+- Cadastro: nome, e-mail, senha e confirmação; política de 8 a 64 caracteres com maiúscula, minúscula, número e símbolo; após sucesso abre o login.
+- Alertas de erro; sucesso no cadastro redireciona para o login.
 
 ### `poll.html`: Detalhe
 
@@ -106,6 +106,8 @@ Bootstrap 5 fornece grid, botões, formulários, card, badge, alerta, modal e pr
 | Enquete com votos | “Não é possível alterar: a enquete já possui votos.” |
 | Enquete encerrada | “A enquete está encerrada.” |
 | E-mail duplicado | “E-mail já cadastrado.” |
+| Senha fraca | “Use maiúscula, minúscula, número e símbolo.” |
+| Senhas divergentes | “As senhas não conferem.” |
 | Credenciais inválidas | “Credenciais inválidas.” |
 | Erro de rede | “Não foi possível conectar ao servidor. Tente novamente.” |
 | Não encontrada | “Enquete não encontrada.” |

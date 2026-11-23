@@ -49,7 +49,7 @@ O `docker-compose.yml` sobe o PostgreSQL 16 com healthcheck e volume nomeado. As
 
 Três conceitos sustentam o domínio: usuário, enquete e voto. O usuário pode criar enquetes e votar. A enquete pertence a um criador, apresenta duas opções e possui um prazo. O voto liga um usuário a uma enquete e é único por participante. O status da enquete é uma visão derivada, não um estado persistido separadamente.
 
-A lista concreta de rotas está nos casos de uso. Os atributos e as constraints acompanham a implementação.
+Rotas já implementadas: `GET /api/polls` (pública) e `POST /api/auth/register` (pública). A lista completa está nos casos de uso. Os atributos e as constraints acompanham a implementação.
 
 ## Padrões de nomenclatura
 
@@ -63,6 +63,7 @@ A lista concreta de rotas está nos casos de uso. Os atributos e as constraints 
 
 - Camadas combinadas a features mantêm regras, transporte e persistência separados (RNF19).
 - DTOs são a fronteira da API; senha e hash nunca saem do backend (RNF04, RNF14).
+- Cadastro normaliza e-mail, valida senha forte e expõe somente dados públicos do usuário (RF01, RNF04, RNF12).
 - Services concentram as regras de negócio, enquanto a apresentação permanece fina.
 - JWT stateless e same-origin, sem papéis de usuário (RNF05, RNF06).
 - Status derivado no lugar de agendador e constraint única para integridade do voto (RF10, RNF12).
