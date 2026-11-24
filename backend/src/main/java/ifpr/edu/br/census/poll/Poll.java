@@ -82,4 +82,8 @@ public class Poll {
     public boolean isClosed() {
         return closedAt != null || !endsAt.isAfter(Instant.now());
     }
+
+    public PollStatus getStatus() {
+        return isClosed() ? PollStatus.CLOSED : PollStatus.OPEN;
+    }
 }

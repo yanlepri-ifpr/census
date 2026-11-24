@@ -35,7 +35,7 @@ O frontend é modular e usa Bootstrap 5 como framework CSS. O JavaScript da apli
 
 Fluxo típico: evento do usuário → módulo da feature → integração com a API → backend → resposta → módulo da feature → apresentação.
 
-Módulos atuais: `auth.js` para sessão, `api.js` para HTTP, `ui.js` para formatação de datas, `register.js`, `login.js` e `polls.js` para as telas.
+Módulos atuais: `auth.js` para sessão, `api.js` para HTTP, `ui.js` para formatação de datas, `register.js`, `login.js`, `polls.js` (lista) e `poll.js` (detalhe) para as telas.
 
 ## Comunicação entre as aplicações
 
@@ -51,7 +51,7 @@ O `docker-compose.yml` sobe o PostgreSQL 16 com healthcheck e volume nomeado. As
 
 Três conceitos sustentam o domínio: usuário, enquete e voto. O usuário pode criar enquetes e votar. A enquete pertence a um criador, apresenta duas opções e possui um prazo. O voto liga um usuário a uma enquete e é único por participante. O status da enquete é uma visão derivada, não um estado persistido separadamente.
 
-Rotas já implementadas: `GET /api/polls` (pública), `POST /api/polls` (autenticada), `POST /api/auth/register` (pública), `POST /api/auth/login` (pública) e `GET /api/auth/me` (protegida). A criação usa `Poll`, `PollRepository`, `CreatePollRequest`, `PollResponse` e `PollService`; qualquer autenticado cria, sem papel de administrador. O login gera um JWT HS256 com claims `sub`, `userId`, `iat` e `exp`, sem claim de papel. A lista completa está nos casos de uso. Os atributos e as constraints acompanham a implementação.
+Rotas já implementadas: `GET /api/polls` e `GET /api/polls/{id}` (públicas), `POST /api/polls` (autenticada), `POST /api/auth/register` (pública), `POST /api/auth/login` (pública) e `GET /api/auth/me` (protegida). Criação e listagem usam `Poll`, `PollRepository`, `CreatePollRequest`, `PollSummaryResponse` e `PollService`; o detalhe usa `PollDetailsResponse`. Qualquer autenticado cria, sem papel de administrador. Enquete inexistente retorna `404` padronizado. O login gera um JWT HS256 com claims `sub`, `userId`, `iat` e `exp`, sem claim de papel. A lista completa está nos casos de uso. Os atributos e as constraints acompanham a implementação.
 
 ## Padrões de nomenclatura
 
@@ -68,6 +68,7 @@ Rotas já implementadas: `GET /api/polls` (pública), `POST /api/polls` (autenti
 - Cadastro normaliza e-mail, valida senha forte e expõe somente dados públicos do usuário (RF01, RNF04, RNF12).
 - Login compara hash BCrypt, emite JWT sem estado e o filtro autentica cada requisição protegida pelo e-mail do `sub` (RF02, RNF05, RNF06).
 - Criação de enquete usa DTO com `optionA`, `optionB` e `endsAt` futuro, grava criador e devolve status derivado `OPEN`/`CLOSED` (RF03, RF11, RF12, RF13, RNF13).
+- Listagem e detalhe são públicos e sem paginação: a lista devolve resumo e o detalhe acrescenta criador e datas, ambos com status derivado (RF04, RF11, RNF20).
 - Services concentram as regras de negócio, enquanto a apresentação permanece fina.
 - JWT stateless e same-origin, sem papéis de usuário (RNF05, RNF06).
 - Status derivado no lugar de agendador e constraint única para integridade do voto (RF10, RNF12).

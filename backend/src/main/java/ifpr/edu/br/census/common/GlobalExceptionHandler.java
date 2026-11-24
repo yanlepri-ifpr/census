@@ -10,6 +10,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
@@ -28,6 +29,11 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, "Dados inválidos", "Revise os campos enviados.", request, Map.of());
     }
 
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiError> handleTypeMismatch(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
+        return build(HttpStatus.BAD_REQUEST, "Dados inválidos", "Identificador inválido.", request, Map.of());
+    }
+
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ApiError> handleEmailAlreadyExists(EmailAlreadyExistsException ex, HttpServletRequest request) {
         return build(HttpStatus.CONFLICT, "Conflito", ex.getMessage(), request, Map.of("email", ex.getMessage()));
@@ -41,6 +47,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<ApiError> handleInvalidCredentials(InvalidCredentialsException ex, HttpServletRequest request) {
         return build(HttpStatus.UNAUTHORIZED, "Não autorizado", ex.getMessage(), request, Map.of());
+    }
+
+    @ExceptionHandler(PollNotFoundException.class)
+    public ResponseEntity<ApiError> handlePollNotFound(PollNotFoundException ex, HttpServletRequest request) {
+        return build(HttpStatus.NOT_FOUND, "Não encontrado", ex.getMessage(), request, Map.of());
     }
 
     @ExceptionHandler(NoResourceFoundException.class)

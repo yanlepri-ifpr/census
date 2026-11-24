@@ -1,6 +1,7 @@
 package ifpr.edu.br.census.poll;
 
 import ifpr.edu.br.census.common.InvalidCredentialsException;
+import ifpr.edu.br.census.common.PollNotFoundException;
 import ifpr.edu.br.census.user.User;
 import ifpr.edu.br.census.user.UserRepository;
 import java.util.List;
@@ -19,16 +20,22 @@ public class PollService {
     }
 
     @Transactional
-    public PollResponse create(CreatePollRequest request, String email) {
+    public PollSummaryResponse create(CreatePollRequest request, String email) {
         User creator = userRepository.findByEmail(email).orElseThrow(InvalidCredentialsException::new);
         Poll poll = new Poll(request.optionA().trim(), request.optionB().trim(), request.endsAt(), creator);
-        return PollResponse.from(pollRepository.save(poll));
+        return PollSummaryResponse.from(pollRepository.save(poll));
     }
 
     @Transactional(readOnly = true)
-    public List<PollResponse> list() {
+    public List<PollSummaryResponse> list() {
         return pollRepository.findAllByOrderByCreatedAtDescIdDesc().stream()
-            .map(PollResponse::from)
+            .map(PollSummaryResponse::from)
             .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public PollDetailsResponse getById(Long id) {
+        Poll poll = pollRepository.findById(id).orElseThrow(PollNotFoundException::new);
+        return PollDetailsResponse.from(poll);
     }
 }

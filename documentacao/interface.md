@@ -55,8 +55,8 @@ Espaçamento em 4/8/12/16/24/32/48px; container máximo de 1100px; raios de 8px 
 
 - Header: wordmark, link “Enquetes” e “Entrar”/“Criar conta” ou e-mail/“Sair”.
 - Conteúdo: título “Enquetes” com botão “Nova enquete” à direita para usuário autenticado, grid de cards carregado de `GET /api/polls`, estados vazio/carregando/erro e alerta de sucesso após criação.
-- Card: “A vs B”, badge de status, data de encerramento e resumo de resultados quando visível.
-- Ações: “Votar”, “Ver resultados” ou “Entrar para votar”; para o criador, “Editar”, “Encerrar” e “Excluir” somente se aberta e sem votos.
+- Card: título “A vs B” e link “Ver detalhes” para `poll.html?id={id}`, badge de status, data de encerramento e resumo de resultados quando visível.
+- Ações: “Votar”, “Ver resultados” ou “Entrar para votar”; para o criador, “Editar”, “Encerrar” e “Excluir” somente se aberta e sem votos. Nesta etapa o card apenas abre o detalhe; essas ações entram nas features seguintes.
 - Modal: `optionA`, `optionB` e `endsAt` em `datetime-local`, sem campo de pergunta. O cliente converte a data para ISO-8601 UTC antes de enviar.
 
 ### `login.html` e `register.html`
@@ -69,11 +69,10 @@ Espaçamento em 4/8/12/16/24/32/48px; container máximo de 1100px; raios de 8px 
 
 ### `poll.html`: Detalhe
 
-- Cabeçalho com “A vs B”, status, data e total de votos quando visível.
-- Enquete aberta e sem voto do usuário: opções grandes A/B e “Confirmar voto”.
-- Quem já votou vê resultados; visitante e não-votante veem “Vote para ver os resultados.”
-- Enquete encerrada mostra resultados públicos e voto desabilitado.
-- Resultados em barras e texto, com contagem e percentual de uma casa decimal.
+- Cabeçalho com “A vs B”, badge de status, data de encerramento e nome do criador.
+- Opções A e B em destaque em dois blocos lado a lado, com link para voltar à lista.
+- Id inválido ou enquete inexistente exibem erro em português.
+- Voto, resultados, total de votos e ações do criador são integrados nas features seguintes.
 
 ## Componentes
 
@@ -114,3 +113,4 @@ Bootstrap 5 fornece grid, botões, formulários, card, badge, alerta, modal e pr
 | Credenciais inválidas | “Credenciais inválidas.” |
 | Erro de rede | “Não foi possível conectar ao servidor. Tente novamente.” |
 | Não encontrada | “Enquete não encontrada.” |
+| ID inválido | “Enquete inválida.” / “Identificador inválido.” |

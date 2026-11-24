@@ -29,8 +29,8 @@
 
 - **Atores:** Visitante, Usuário. **Requisitos:** RF04, RF11.
 - **Pré-condição:** nenhuma.
-- **Fluxo principal:** frontend chama `GET /api/polls` → backend calcula status e flags por observador → frontend renderiza cards “A vs B” com status, data e ações permitidas.
-- **Exceções:** lista vazia exibe estado vazio; falha de rede exibe erro e opção de recarregar.
+- **Fluxo principal:** frontend chama `GET /api/polls` → backend calcula status → frontend renderiza cards “A vs B” com status, data e link para o detalhe; ao abrir um card, `GET /api/polls/{id}` devolve as opções, o criador e o status da enquete. A sinalização de voto do observador é acrescentada junto ao voto (UC05).
+- **Exceções:** lista vazia exibe estado vazio; detalhe inexistente retorna `404` e id inválido é recusado no cliente; falha de rede exibe erro e opção de recarregar.
 - **Pós-condição:** nenhuma alteração de estado.
 
 ## UC05: Votar

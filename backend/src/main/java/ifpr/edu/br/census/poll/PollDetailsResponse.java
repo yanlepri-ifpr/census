@@ -2,7 +2,7 @@ package ifpr.edu.br.census.poll;
 
 import java.time.Instant;
 
-public record PollResponse(
+public record PollDetailsResponse(
     Long id,
     String optionA,
     String optionB,
@@ -13,8 +13,8 @@ public record PollResponse(
     String createdByName,
     PollStatus status
 ) {
-    public static PollResponse from(Poll poll) {
-        return new PollResponse(
+    public static PollDetailsResponse from(Poll poll) {
+        return new PollDetailsResponse(
             poll.getId(),
             poll.getOptionA(),
             poll.getOptionB(),
@@ -23,7 +23,7 @@ public record PollResponse(
             poll.getCreatedAt(),
             poll.getCreator().getId(),
             poll.getCreator().getName(),
-            poll.isClosed() ? PollStatus.CLOSED : PollStatus.OPEN
+            poll.getStatus()
         );
     }
 }

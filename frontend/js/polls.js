@@ -66,7 +66,7 @@ function validate() {
 
 function renderPoll(poll) {
   const column = document.createElement("div");
-  column.className = "col-12";
+  column.className = "col-md-6 col-xl-4";
 
   const card = document.createElement("article");
   card.className = "card h-100 p-4";
@@ -74,20 +74,30 @@ function renderPoll(poll) {
   const header = document.createElement("div");
   header.className = "d-flex align-items-start justify-content-between gap-3";
 
+  const titleLink = document.createElement("a");
+  titleLink.className = "text-decoration-none text-reset";
+  titleLink.href = `/poll.html?id=${encodeURIComponent(poll.id)}`;
+
   const title = document.createElement("h2");
   title.className = "h2 mb-0";
   title.textContent = `${poll.optionA} vs ${poll.optionB}`;
+  titleLink.append(title);
 
   const badge = document.createElement("span");
   badge.className = `badge ${poll.status === "CLOSED" ? "badge-closed" : "badge-open"}`;
   badge.textContent = poll.status === "CLOSED" ? "Encerrada" : "Aberta";
-  header.append(title, badge);
+  header.append(titleLink, badge);
 
   const date = document.createElement("p");
   date.className = "small text-secondary mt-3 mb-0";
   date.textContent = `Encerra em ${formatDateTime(poll.endsAt)}`;
 
-  card.append(header, date);
+  const detailsLink = document.createElement("a");
+  detailsLink.className = "small fw-semibold d-inline-block mt-3";
+  detailsLink.href = titleLink.href;
+  detailsLink.textContent = "Ver detalhes";
+
+  card.append(header, date, detailsLink);
   column.append(card);
   return column;
 }
