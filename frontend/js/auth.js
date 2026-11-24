@@ -54,6 +54,7 @@ export function setupHeader() {
   const userLinks = document.getElementById("userLinks");
   const userEmail = document.getElementById("userEmail");
   const logoutLink = document.getElementById("logoutLink");
+  const newPollAction = document.getElementById("newPollAction");
   if (!guestLinks || !userLinks) return;
 
   if (!getToken()) {
@@ -64,10 +65,12 @@ export function setupHeader() {
   if (user) {
     setVisible(guestLinks, false);
     setVisible(userLinks, true);
+    if (newPollAction) setVisible(newPollAction, true);
     userEmail.textContent = user.email ?? "";
   } else {
     setVisible(guestLinks, true);
     setVisible(userLinks, false);
+    if (newPollAction) setVisible(newPollAction, false);
     userEmail.textContent = "";
   }
 

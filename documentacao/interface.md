@@ -53,11 +53,11 @@ Espaçamento em 4/8/12/16/24/32/48px; container máximo de 1100px; raios de 8px 
 
 ### `index.html`: Lista de enquetes
 
-- Header: wordmark, link “Enquetes”, “Entrar”/“Criar conta” ou e-mail/“Sair”, e “Nova enquete” para usuário autenticado.
-- Conteúdo: título “Enquetes”, grid de cards, estados vazio/carregando/erro.
+- Header: wordmark, link “Enquetes” e “Entrar”/“Criar conta” ou e-mail/“Sair”.
+- Conteúdo: título “Enquetes” com botão “Nova enquete” à direita para usuário autenticado, grid de cards carregado de `GET /api/polls`, estados vazio/carregando/erro e alerta de sucesso após criação.
 - Card: “A vs B”, badge de status, data de encerramento e resumo de resultados quando visível.
 - Ações: “Votar”, “Ver resultados” ou “Entrar para votar”; para o criador, “Editar”, “Encerrar” e “Excluir” somente se aberta e sem votos.
-- Modal: `optionA`, `optionB` e `endsAt`, sem campo de pergunta.
+- Modal: `optionA`, `optionB` e `endsAt` em `datetime-local`, sem campo de pergunta. O cliente converte a data para ISO-8601 UTC antes de enviar.
 
 ### `login.html` e `register.html`
 
@@ -107,6 +107,7 @@ Bootstrap 5 fornece grid, botões, formulários, card, badge, alerta, modal e pr
 | Sem permissão | “Somente o criador pode executar esta ação.” |
 | Enquete com votos | “Não é possível alterar: a enquete já possui votos.” |
 | Enquete encerrada | “A enquete está encerrada.” |
+| Data passada | “A data de encerramento deve ser futura.” |
 | E-mail duplicado | “E-mail já cadastrado.” |
 | Senha fraca | “Use maiúscula, minúscula, número e símbolo.” |
 | Senhas divergentes | “As senhas não conferem.” |
