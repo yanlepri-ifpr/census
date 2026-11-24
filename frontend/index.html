@@ -13,8 +13,14 @@
       <a class="text-decoration-none fw-bold fs-4" href="/">Census</a>
       <nav class="d-flex gap-3">
         <a href="/">Enquetes</a>
-        <a href="/login.html">Entrar</a>
-        <a href="/register.html">Criar conta</a>
+        <span id="guestLinks" class="d-flex gap-3">
+          <a href="/login.html">Entrar</a>
+          <a href="/register.html">Criar conta</a>
+        </span>
+        <span id="userLinks" class="d-none gap-3">
+          <span id="userEmail" class="text-secondary small"></span>
+          <a href="#" id="logoutLink">Sair</a>
+        </span>
       </nav>
     </div>
   </header>
@@ -25,6 +31,6 @@
     </div>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/js/bootstrap.bundle.min.js" integrity="sha384-WyOxWvTyr1QaMPfiPJSv76iReVthorl5uWlFtZPyK0IEB0hGzo9y5Bp9mYanr8Bu" crossorigin="anonymous"></script>
-  <script type="module" src="/js/api.js"></script>
+  <script type="module" src="/js/auth.js"></script>
 </body>
 </html>

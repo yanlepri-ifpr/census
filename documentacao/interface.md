@@ -64,6 +64,7 @@ Espaçamento em 4/8/12/16/24/32/48px; container máximo de 1100px; raios de 8px 
 - Card centralizado até 420px.
 - Login: e-mail, senha, links para cadastro e volta à lista.
 - Cadastro: nome, e-mail, senha e confirmação; política de 8 a 64 caracteres com maiúscula, minúscula, número e símbolo; após sucesso abre o login.
+- Login válido guarda a sessão no navegador, troca o header para e-mail/“Sair” e abre a lista de enquetes.
 - Alertas de erro; sucesso no cadastro redireciona para o login.
 
 ### `poll.html`: Detalhe
@@ -83,6 +84,7 @@ Bootstrap 5 fornece grid, botões, formulários, card, badge, alerta, modal e pr
 - Foco em desktop; uma ação primária por tela; status sempre visível.
 - Botões desabilitados durante requisições para evitar duplo clique.
 - Validação inline nos campos e alerta global para erros de API.
+- Em `401` de rota protegida, limpar a sessão local; o logout remove token e dados do usuário.
 - Modal com `Esc` para fechar e clique no backdrop.
 - Datas em `pt-BR` em `America/Sao_Paulo`.
 - Texto de opções via `textContent`; nunca `innerHTML` com dados de usuário.

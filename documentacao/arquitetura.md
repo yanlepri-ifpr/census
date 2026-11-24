@@ -37,19 +37,19 @@ Fluxo típico: evento do usuário → módulo da feature → integração com a 
 
 ## Comunicação entre as aplicações
 
-O navegador carrega os arquivos estáticos servidos pelo Spring Boot e chama a API com `fetch` na mesma origem. O token JWT viaja no header das requisições protegidas; não há CORS nem sessão no servidor.
+O navegador carrega os arquivos estáticos servidos pelo Spring Boot e chama a API com `fetch` na mesma origem. O token JWT viaja no header `Authorization: Bearer <token>` somente nas requisições protegidas; não há CORS nem sessão no servidor.
 
 O backend converte DTOs em regras e persistência; o frontend converte respostas em estado de tela. Erros são padronizados no backend e explicados ao usuário no frontend. Datas trafegam em ISO-8601 UTC na API e são formatadas no cliente para o fuso local.
 
 ## Configuração local
 
-O `docker-compose.yml` sobe o PostgreSQL 16 com healthcheck e volume nomeado. As variáveis vêm de `.env`, criado a partir de `.env.example`; segredos não são versionados.
+O `docker-compose.yml` sobe o PostgreSQL 16 com healthcheck e volume nomeado. As variáveis vêm de `.env`, criado a partir de `.env.example`; segredos não são versionados. A autenticação exige `JWT_SECRET` com no mínimo 32 caracteres para HS256 e aceita `JWT_EXPIRATION_MINUTES` com padrão de `1440`. Segredo ausente ou curto impede a inicialização da API.
 
 ## Modelo conceitual
 
 Três conceitos sustentam o domínio: usuário, enquete e voto. O usuário pode criar enquetes e votar. A enquete pertence a um criador, apresenta duas opções e possui um prazo. O voto liga um usuário a uma enquete e é único por participante. O status da enquete é uma visão derivada, não um estado persistido separadamente.
 
-Rotas já implementadas: `GET /api/polls` (pública) e `POST /api/auth/register` (pública). A lista completa está nos casos de uso. Os atributos e as constraints acompanham a implementação.
+Rotas já implementadas: `GET /api/polls` (pública), `POST /api/auth/register` (pública), `POST /api/auth/login` (pública) e `GET /api/auth/me` (protegida). O login gera um JWT HS256 com claims `sub`, `userId`, `iat` e `exp`, sem claim de papel. A lista completa está nos casos de uso. Os atributos e as constraints acompanham a implementação.
 
 ## Padrões de nomenclatura
 
@@ -64,6 +64,7 @@ Rotas já implementadas: `GET /api/polls` (pública) e `POST /api/auth/register`
 - Camadas combinadas a features mantêm regras, transporte e persistência separados (RNF19).
 - DTOs são a fronteira da API; senha e hash nunca saem do backend (RNF04, RNF14).
 - Cadastro normaliza e-mail, valida senha forte e expõe somente dados públicos do usuário (RF01, RNF04, RNF12).
+- Login compara hash BCrypt, emite JWT sem estado e o filtro autentica cada requisição protegida pelo e-mail do `sub` (RF02, RNF05, RNF06).
 - Services concentram as regras de negócio, enquanto a apresentação permanece fina.
 - JWT stateless e same-origin, sem papéis de usuário (RNF05, RNF06).
 - Status derivado no lugar de agendador e constraint única para integridade do voto (RF10, RNF12).

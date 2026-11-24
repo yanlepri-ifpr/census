@@ -17,3 +17,6 @@ spring:
     time-zone: UTC
 server:
   port: ${SERVER_PORT:8080}
+jwt:
+  secret: ${JWT_SECRET:?Defina JWT_SECRET}
+  expiration-minutes: ${JWT_EXPIRATION_MINUTES:1440}
