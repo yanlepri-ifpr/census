@@ -1,5 +1,6 @@
 package ifpr.edu.br.census.poll;
 
+import ifpr.edu.br.census.vote.VoteOption;
 import java.time.Instant;
 
 public record PollDetailsResponse(
@@ -12,9 +13,16 @@ public record PollDetailsResponse(
     Long createdById,
     String createdByName,
     PollStatus status,
-    boolean hasVotes
+    boolean hasVotes,
+    boolean hasVoted,
+    VoteOption votedOption
 ) {
-    public static PollDetailsResponse from(Poll poll, boolean hasVotes) {
+    public static PollDetailsResponse from(
+        Poll poll,
+        boolean hasVotes,
+        boolean hasVoted,
+        VoteOption votedOption
+    ) {
         return new PollDetailsResponse(
             poll.getId(),
             poll.getOptionA(),
@@ -25,7 +33,9 @@ public record PollDetailsResponse(
             poll.getCreator().getId(),
             poll.getCreator().getName(),
             poll.getStatus(),
-            hasVotes
+            hasVotes,
+            hasVoted,
+            votedOption
         );
     }
 }

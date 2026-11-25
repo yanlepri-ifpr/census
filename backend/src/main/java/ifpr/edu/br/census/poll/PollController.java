@@ -26,13 +26,13 @@ public class PollController {
     }
 
     @GetMapping
-    public List<PollSummaryResponse> list() {
-        return pollService.list();
+    public List<PollSummaryResponse> list(Principal principal) {
+        return pollService.list(principalName(principal));
     }
 
     @GetMapping("/{id}")
-    public PollDetailsResponse getById(@PathVariable Long id) {
-        return pollService.getById(id);
+    public PollDetailsResponse getById(@PathVariable Long id, Principal principal) {
+        return pollService.getById(id, principalName(principal));
     }
 
     @PostMapping
@@ -61,5 +61,9 @@ public class PollController {
     @PatchMapping("/{id}/close")
     public PollDetailsResponse close(@PathVariable Long id, Principal principal) {
         return pollService.close(id, principal.getName());
+    }
+
+    private String principalName(Principal principal) {
+        return principal == null ? null : principal.getName();
     }
 }

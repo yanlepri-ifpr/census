@@ -9,9 +9,10 @@ public record PollSummaryResponse(
     Instant endsAt,
     Long createdById,
     PollStatus status,
-    boolean hasVotes
+    boolean hasVotes,
+    boolean hasVoted
 ) {
-    public static PollSummaryResponse from(Poll poll, boolean hasVotes) {
+    public static PollSummaryResponse from(Poll poll, boolean hasVotes, boolean hasVoted) {
         return new PollSummaryResponse(
             poll.getId(),
             poll.getOptionA(),
@@ -19,7 +20,8 @@ public record PollSummaryResponse(
             poll.getEndsAt(),
             poll.getCreator().getId(),
             poll.getStatus(),
-            hasVotes
+            hasVotes,
+            hasVoted
         );
     }
 }

@@ -55,6 +55,11 @@ h3 {
   background: #FFFFFF;
 }
 
+.poll-option-selected {
+  border-color: #2563EB;
+  background: #DBEAFE;
+}
+
 .btn {
   border-radius: 6px;
   font-weight: 600;
@@ -87,4 +92,10 @@ h3 {
   background: #FEE2E2;
   color: #991B1B;
   border-color: #FECACA;
+}
+
+.alert-success {
+  background: #D1FAE5;
+  color: #065F46;
+  border-color: #10B981;
 }

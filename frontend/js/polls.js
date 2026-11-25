@@ -1,5 +1,5 @@
 import { apiFetch } from "./api.js";
-import { getCurrentUser } from "./auth.js";
+import { getCurrentUser, isAuthenticated } from "./auth.js";
 import { formatDateTime } from "./ui.js";
 
 const list = document.getElementById("poll-list");
@@ -166,6 +166,20 @@ function renderPoll(poll) {
   detailsLink.href = titleLink.href;
 
   card.append(header, date, detailsLink);
+
+  if (poll.status === "OPEN") {
+    if (poll.hasVoted) {
+      card.append(createElement("p", "small fw-semibold text-success mt-2 mb-0", "Você votou nesta enquete."));
+    } else if (isAuthenticated()) {
+      const voteLink = createElement("a", "small fw-semibold d-inline-block mt-2", "Votar");
+      voteLink.href = titleLink.href;
+      card.append(voteLink);
+    } else {
+      const loginLink = createElement("a", "small fw-semibold d-inline-block mt-2", "Entrar para votar");
+      loginLink.href = "/login.html";
+      card.append(loginLink);
+    }
+  }
 
   if (isCreator(poll)) {
     if (canManage(poll)) {

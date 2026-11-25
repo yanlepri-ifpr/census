@@ -8,3 +8,10 @@ export function formatDateTime(iso) {
     minute: "2-digit"
   }).format(new Date(iso));
 }
+
+export function formatPercent(value) {
+  return `${Number(value).toLocaleString("pt-BR", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1
+  })}%`;
+}

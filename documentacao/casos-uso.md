@@ -29,7 +29,7 @@
 
 - **Atores:** Visitante, Usuário. **Requisitos:** RF04, RF11.
 - **Pré-condição:** nenhuma.
-- **Fluxo principal:** frontend chama `GET /api/polls` → backend calcula status → frontend renderiza cards “A vs B” com status, data e link para o detalhe; ao abrir um card, `GET /api/polls/{id}` devolve as opções, o criador e o status da enquete. A sinalização de voto do observador é acrescentada junto ao voto (UC05).
+- **Fluxo principal:** frontend chama `GET /api/polls` → backend calcula status → frontend renderiza cards “A vs B” com status, data e link para o detalhe; ao abrir um card, `GET /api/polls/{id}` devolve as opções, o criador e o status da enquete. Para usuário autenticado, resumo e detalhe incluem `hasVoted` e o detalhe inclui `votedOption`, para bloquear novos votos e destacar a escolha (UC05).
 - **Exceções:** lista vazia exibe estado vazio; detalhe inexistente retorna `404` e id inválido é recusado no cliente; falha de rede exibe erro e opção de recarregar.
 - **Pós-condição:** nenhuma alteração de estado.
 
@@ -37,9 +37,9 @@
 
 - **Ator:** Usuário autenticado. **Requisitos:** RF08, RF09, RNF12.
 - **Pré-condição:** enquete aberta e ator ainda não votou.
-- **Fluxo principal:** abre `poll.html?id={id}` → seleciona A ou B → envia `POST /api/polls/{id}/votes` → backend valida e grava o voto → retorna `201` com resultados → frontend exibe as contagens.
-- **Exceções:** visitante retorna `401`; enquete encerrada ou voto duplicado retornam `409`; opção inválida retorna `400`; enquete inexistente retorna `404`; a constraint única resolve concorrência.
-- **Pós-condição:** voto registrado e imutável.
+- **Fluxo principal:** abre `poll.html?id={id}` → seleciona A ou B → envia `POST /api/polls/{id}/votes` com `{ "option": "A"|"B" }` → backend valida, grava o voto e devolve `201` com contagens e percentuais → frontend exibe as contagens, destaca a opção escolhida e bloqueia novos votos.
+- **Exceções:** visitante retorna `401`; enquete encerrada ou voto duplicado retornam `409`; opção inválida retorna `400`; enquete inexistente retorna `404`; a constraint única `uk_votes_poll_user` resolve concorrência.
+- **Pós-condição:** voto registrado e imutável; não há rota para alterar ou remover voto.
 
 ## UC06: Ver resultados
 

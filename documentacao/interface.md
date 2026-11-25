@@ -55,8 +55,8 @@ Espaçamento em 4/8/12/16/24/32/48px; container máximo de 1100px; raios de 8px 
 
 - Header: wordmark, link “Enquetes” e “Entrar”/“Criar conta” ou e-mail/“Sair”.
 - Conteúdo: título “Enquetes” com botão “Nova enquete” à direita para usuário autenticado, grid de cards carregado de `GET /api/polls`, estados vazio/carregando/erro e alerta de sucesso após criação.
-- Card: título “A vs B” e link “Ver detalhes” para `poll.html?id={id}`, badge de status, data de encerramento e resumo de resultados quando visível.
-- Ações: “Votar”, “Ver resultados” ou “Entrar para votar” entram nas features seguintes. Para o criador, “Editar”, “Encerrar” e “Excluir” aparecem somente com enquete aberta e sem votos; caso contrário, o card explica o motivo.
+- Card: título “A vs B” e link “Ver detalhes” para `poll.html?id={id}`, badge de status, data de encerramento e, em enquetes abertas, a ação de voto disponível para o observador.
+- Ações: “Votar” aparece para usuário autenticado que ainda não votou, “Entrar para votar” para visitante e “Você votou nesta enquete.” para quem já participou; “Ver resultados” entra na feature seguinte. Para o criador, “Editar”, “Encerrar” e “Excluir” aparecem somente com enquete aberta e sem votos; caso contrário, o card explica o motivo.
 - Modal: `optionA`, `optionB` e `endsAt` em `datetime-local`, sem campo de pergunta. Serve para criar e editar; o cliente converte a data para ISO-8601 UTC antes de enviar.
 
 ### `login.html` e `register.html`
@@ -74,7 +74,7 @@ Espaçamento em 4/8/12/16/24/32/48px; container máximo de 1100px; raios de 8px 
 - Id inválido ou enquete inexistente exibem erro em português.
 - Seção “Gerenciar enquete” aparece só para o criador, com “Editar” (abre o formulário na lista), “Encerrar” e “Excluir” quando a enquete está aberta e sem votos; caso contrário, mostra o motivo do bloqueio.
 - Confirmação de encerramento ou exclusão retorna à lista com alerta de sucesso.
-- Voto, resultados e total de votos são integrados nas features seguintes.
+- Seção “Votar” com botões para A e B aparece para usuário autenticado em enquete aberta; visitante vê “Entrar para votar”. Após o voto, a opção escolhida é destacada, os botões são removidos e contagens/percentuais aparecem em barras com o total de votos.
 
 ## Componentes
 
@@ -107,6 +107,7 @@ Bootstrap 5 fornece grid, botões, formulários, card, badge, alerta, modal e pr
 | Enquete excluída | “Enquete excluída com sucesso.” |
 | Voto registrado | “Voto registrado com sucesso.” |
 | Já votou | “Você já votou nesta enquete.” |
+| Opção inválida | “Escolha a opção A ou B.” |
 | Resultados ocultos | “Vote para ver os resultados.” |
 | Resultados públicos | “Resultados disponíveis após o encerramento.” |
 | Sem permissão | “Somente o criador pode executar esta ação.” |

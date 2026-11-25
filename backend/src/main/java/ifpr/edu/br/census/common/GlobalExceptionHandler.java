@@ -29,6 +29,11 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, "Dados inválidos", "Revise os campos enviados.", request, Map.of());
     }
 
+    @ExceptionHandler(InvalidVoteOptionException.class)
+    public ResponseEntity<ApiError> handleInvalidVoteOption(InvalidVoteOptionException ex, HttpServletRequest request) {
+        return build(HttpStatus.BAD_REQUEST, "Dados inválidos", ex.getMessage(), request, Map.of("option", ex.getMessage()));
+    }
+
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ApiError> handleTypeMismatch(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
         return build(HttpStatus.BAD_REQUEST, "Dados inválidos", "Identificador inválido.", request, Map.of());
