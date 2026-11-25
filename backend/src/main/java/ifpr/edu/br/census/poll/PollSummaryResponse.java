@@ -7,15 +7,19 @@ public record PollSummaryResponse(
     String optionA,
     String optionB,
     Instant endsAt,
-    PollStatus status
+    Long createdById,
+    PollStatus status,
+    boolean hasVotes
 ) {
-    public static PollSummaryResponse from(Poll poll) {
+    public static PollSummaryResponse from(Poll poll, boolean hasVotes) {
         return new PollSummaryResponse(
             poll.getId(),
             poll.getOptionA(),
             poll.getOptionB(),
             poll.getEndsAt(),
-            poll.getStatus()
+            poll.getCreator().getId(),
+            poll.getStatus(),
+            hasVotes
         );
     }
 }

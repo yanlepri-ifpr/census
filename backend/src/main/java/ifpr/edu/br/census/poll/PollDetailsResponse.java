@@ -11,9 +11,10 @@ public record PollDetailsResponse(
     Instant createdAt,
     Long createdById,
     String createdByName,
-    PollStatus status
+    PollStatus status,
+    boolean hasVotes
 ) {
-    public static PollDetailsResponse from(Poll poll) {
+    public static PollDetailsResponse from(Poll poll, boolean hasVotes) {
         return new PollDetailsResponse(
             poll.getId(),
             poll.getOptionA(),
@@ -23,7 +24,8 @@ public record PollDetailsResponse(
             poll.getCreatedAt(),
             poll.getCreator().getId(),
             poll.getCreator().getName(),
-            poll.getStatus()
+            poll.getStatus(),
+            hasVotes
         );
     }
 }

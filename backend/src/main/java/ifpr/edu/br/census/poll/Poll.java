@@ -86,4 +86,14 @@ public class Poll {
     public PollStatus getStatus() {
         return isClosed() ? PollStatus.CLOSED : PollStatus.OPEN;
     }
+
+    public void update(String optionA, String optionB, Instant endsAt) {
+        this.optionA = optionA;
+        this.optionB = optionB;
+        this.endsAt = endsAt;
+    }
+
+    public void close() {
+        this.closedAt = Instant.now();
+    }
 }

@@ -56,8 +56,8 @@ Espaçamento em 4/8/12/16/24/32/48px; container máximo de 1100px; raios de 8px 
 - Header: wordmark, link “Enquetes” e “Entrar”/“Criar conta” ou e-mail/“Sair”.
 - Conteúdo: título “Enquetes” com botão “Nova enquete” à direita para usuário autenticado, grid de cards carregado de `GET /api/polls`, estados vazio/carregando/erro e alerta de sucesso após criação.
 - Card: título “A vs B” e link “Ver detalhes” para `poll.html?id={id}`, badge de status, data de encerramento e resumo de resultados quando visível.
-- Ações: “Votar”, “Ver resultados” ou “Entrar para votar”; para o criador, “Editar”, “Encerrar” e “Excluir” somente se aberta e sem votos. Nesta etapa o card apenas abre o detalhe; essas ações entram nas features seguintes.
-- Modal: `optionA`, `optionB` e `endsAt` em `datetime-local`, sem campo de pergunta. O cliente converte a data para ISO-8601 UTC antes de enviar.
+- Ações: “Votar”, “Ver resultados” ou “Entrar para votar” entram nas features seguintes. Para o criador, “Editar”, “Encerrar” e “Excluir” aparecem somente com enquete aberta e sem votos; caso contrário, o card explica o motivo.
+- Modal: `optionA`, `optionB` e `endsAt` em `datetime-local`, sem campo de pergunta. Serve para criar e editar; o cliente converte a data para ISO-8601 UTC antes de enviar.
 
 ### `login.html` e `register.html`
 
@@ -72,7 +72,9 @@ Espaçamento em 4/8/12/16/24/32/48px; container máximo de 1100px; raios de 8px 
 - Cabeçalho com “A vs B”, badge de status, data de encerramento e nome do criador.
 - Opções A e B em destaque em dois blocos lado a lado, com link para voltar à lista.
 - Id inválido ou enquete inexistente exibem erro em português.
-- Voto, resultados, total de votos e ações do criador são integrados nas features seguintes.
+- Seção “Gerenciar enquete” aparece só para o criador, com “Editar” (abre o formulário na lista), “Encerrar” e “Excluir” quando a enquete está aberta e sem votos; caso contrário, mostra o motivo do bloqueio.
+- Confirmação de encerramento ou exclusão retorna à lista com alerta de sucesso.
+- Voto, resultados e total de votos são integrados nas features seguintes.
 
 ## Componentes
 
@@ -84,6 +86,7 @@ Bootstrap 5 fornece grid, botões, formulários, card, badge, alerta, modal e pr
 - Botões desabilitados durante requisições para evitar duplo clique.
 - Validação inline nos campos e alerta global para erros de API.
 - Em `401` de rota protegida, limpar a sessão local; o logout remove token e dados do usuário.
+- Ações do criador usam confirmação; após redirecionamento, a mensagem de sucesso é transportada por `census.flash`.
 - Modal com `Esc` para fechar e clique no backdrop.
 - Datas em `pt-BR` em `America/Sao_Paulo`.
 - Texto de opções via `textContent`; nunca `innerHTML` com dados de usuário.
@@ -99,6 +102,9 @@ Bootstrap 5 fornece grid, botões, formulários, card, badge, alerta, modal e pr
 | Contexto | Mensagem |
 |---|---|
 | Enquete criada | “Enquete criada com sucesso.” |
+| Enquete atualizada | “Enquete atualizada com sucesso.” |
+| Enquete encerrada pelo criador | “Enquete encerrada com sucesso.” |
+| Enquete excluída | “Enquete excluída com sucesso.” |
 | Voto registrado | “Voto registrado com sucesso.” |
 | Já votou | “Você já votou nesta enquete.” |
 | Resultados ocultos | “Vote para ver os resultados.” |

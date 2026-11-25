@@ -53,15 +53,15 @@
 
 - **Ator:** Criador. **Requisitos:** RF05.
 - **Pré-condição:** enquete aberta, sem votos e criada pelo ator.
-- **Fluxo principal:** clica em “Editar” → ajusta A, B e `endsAt` → envia `PUT /api/polls/{id}` → backend valida autoria e estado → retorna `200` → frontend atualiza o card.
-- **Exceções:** outro usuário recebe `403`; com votos ou encerrada retorna `409`; dados inválidos retornam `400`; visitante retorna `401`; enquete inexistente retorna `404`.
+- **Fluxo principal:** clica em “Editar” → ajusta A, B e `endsAt` → envia `PUT /api/polls/{id}` → backend valida autoria, status aberto e zero votos → retorna `200` com o detalhe → frontend recarrega a lista. No detalhe, “Editar” abre o mesmo formulário na lista com `?edit={id}`.
+- **Exceções:** outro usuário recebe `403`; com votos ou encerrada retorna `409`; dados inválidos retornam `400`; visitante retorna `401`; enquete inexistente retorna `404`. A interface mostra o motivo quando a ação está indisponível.
 - **Pós-condição:** enquete atualizada.
 
 ## UC08: Usuário exclui enquete
 
 - **Ator:** Criador. **Requisitos:** RF06.
 - **Pré-condição:** enquete aberta, sem votos e criada pelo ator.
-- **Fluxo principal:** clica em “Excluir” → confirma → envia `DELETE /api/polls/{id}` → backend valida e remove → retorna `204` → frontend remove o card.
+- **Fluxo principal:** clica em “Excluir” → confirma → envia `DELETE /api/polls/{id}` → backend valida autoria, status aberto e zero votos, remove e retorna `204` → frontend recarrega a lista e mostra a confirmação.
 - **Exceções:** outro usuário recebe `403`; com votos ou encerrada retorna `409`; visitante retorna `401`; enquete inexistente retorna `404`; cancelar a confirmação não envia requisição.
 - **Pós-condição:** enquete removida.
 
@@ -69,7 +69,7 @@
 
 - **Ator:** Criador. **Requisitos:** RF07.
 - **Pré-condição:** enquete aberta, sem votos e criada pelo ator.
-- **Fluxo principal:** clica em “Encerrar” → confirma → envia `PATCH /api/polls/{id}/close` → backend preenche `closedAt` → retorna `200` → resultados passam a ser públicos.
+- **Fluxo principal:** clica em “Encerrar” → confirma → envia `PATCH /api/polls/{id}/close` → backend valida autoria, status aberto e zero votos, preenche `closedAt` e retorna `200` → frontend recarrega a tela; os resultados passam a ser públicos.
 - **Exceções:** outro usuário recebe `403`; com votos ou já encerrada retorna `409`; visitante retorna `401`; enquete inexistente retorna `404`.
 - **Pós-condição:** enquete `CLOSED` e resultados públicos.
 

@@ -1,4 +1,5 @@
 import { apiFetch } from "./api.js";
+import { getCurrentUser } from "./auth.js";
 import { formatDateTime } from "./ui.js";
 
 const list = document.getElementById("poll-list");
@@ -7,12 +8,21 @@ const form = document.getElementById("pollForm");
 const formAlert = document.getElementById("pollFormAlert");
 const submitButton = document.getElementById("pollSubmitButton");
 const newPollButton = document.getElementById("newPollButton");
+const modalTitle = document.getElementById("pollModalTitle");
 const modal = window.bootstrap.Modal.getOrCreateInstance(document.getElementById("pollModal"));
 const fields = {
   optionA: document.getElementById("optionAInput"),
   optionB: document.getElementById("optionBInput"),
   endsAt: document.getElementById("endsAtInput")
 };
+let editingPollId = null;
+
+function createElement(tag, className, text) {
+  const element = document.createElement(tag);
+  if (className) element.className = className;
+  if (text) element.textContent = text;
+  return element;
+}
 
 function showAlert(element, message, variant = "danger") {
   element.textContent = message;
@@ -22,6 +32,11 @@ function showAlert(element, message, variant = "danger") {
 function hideAlert(element) {
   element.textContent = "";
   element.className = "alert d-none";
+}
+
+function apiMessage(error, fallback) {
+  if (error.status === 401) return "Faça login novamente para continuar.";
+  return error.message ?? fallback;
 }
 
 function clearFormErrors() {
@@ -64,72 +79,142 @@ function validate() {
   return errors;
 }
 
+function isCreator(poll) {
+  const user = getCurrentUser();
+  return Boolean(user) && String(user.id) === String(poll.createdById);
+}
+
+function canManage(poll) {
+  return poll.status === "OPEN" && !poll.hasVotes;
+}
+
+function managementReason(poll) {
+  if (poll.status === "CLOSED") return "A enquete está encerrada e não pode ser alterada.";
+  return "Não é possível alterar: a enquete já possui votos.";
+}
+
+function actionButton(label, className, onClick) {
+  const button = createElement("button", `btn btn-sm ${className}`, label);
+  button.type = "button";
+  button.addEventListener("click", onClick);
+  return button;
+}
+
+function openEditModal(poll) {
+  editingPollId = poll.id;
+  modalTitle.textContent = "Editar enquete";
+  submitButton.textContent = "Salvar alterações";
+  clearFormErrors();
+  fields.optionA.value = poll.optionA;
+  fields.optionB.value = poll.optionB;
+  fields.endsAt.min = toDateTimeLocal(new Date());
+  fields.endsAt.value = toDateTimeLocal(new Date(poll.endsAt));
+  modal.show();
+}
+
+function resetCreateModal() {
+  editingPollId = null;
+  modalTitle.textContent = "Nova enquete";
+  submitButton.textContent = "Criar enquete";
+  form.reset();
+  clearFormErrors();
+  fields.endsAt.min = toDateTimeLocal(new Date());
+}
+
+async function closePoll(poll) {
+  if (!window.confirm("Encerrar esta enquete?")) return;
+  try {
+    await apiFetch(`/polls/${poll.id}/close`, { method: "PATCH" });
+    showAlert(listAlert, "Enquete encerrada com sucesso.", "success");
+    await loadPolls();
+  } catch (error) {
+    showAlert(listAlert, apiMessage(error, "Não foi possível encerrar a enquete."));
+  }
+}
+
+async function deletePoll(poll) {
+  if (!window.confirm("Excluir esta enquete?")) return;
+  try {
+    await apiFetch(`/polls/${poll.id}`, { method: "DELETE" });
+    showAlert(listAlert, "Enquete excluída com sucesso.", "success");
+    await loadPolls();
+  } catch (error) {
+    showAlert(listAlert, apiMessage(error, "Não foi possível excluir a enquete."));
+  }
+}
+
 function renderPoll(poll) {
-  const column = document.createElement("div");
-  column.className = "col-md-6 col-xl-4";
+  const column = createElement("div", "col-md-6 col-xl-4");
+  const card = createElement("article", "card h-100 p-4");
 
-  const card = document.createElement("article");
-  card.className = "card h-100 p-4";
+  const header = createElement("div", "d-flex align-items-start justify-content-between gap-3");
 
-  const header = document.createElement("div");
-  header.className = "d-flex align-items-start justify-content-between gap-3";
-
-  const titleLink = document.createElement("a");
-  titleLink.className = "text-decoration-none text-reset";
+  const titleLink = createElement("a", "text-decoration-none text-reset");
   titleLink.href = `/poll.html?id=${encodeURIComponent(poll.id)}`;
+  titleLink.append(createElement("h2", "h2 mb-0", `${poll.optionA} vs ${poll.optionB}`));
 
-  const title = document.createElement("h2");
-  title.className = "h2 mb-0";
-  title.textContent = `${poll.optionA} vs ${poll.optionB}`;
-  titleLink.append(title);
-
-  const badge = document.createElement("span");
-  badge.className = `badge ${poll.status === "CLOSED" ? "badge-closed" : "badge-open"}`;
-  badge.textContent = poll.status === "CLOSED" ? "Encerrada" : "Aberta";
+  const badge = createElement(
+    "span",
+    `badge ${poll.status === "CLOSED" ? "badge-closed" : "badge-open"}`,
+    poll.status === "CLOSED" ? "Encerrada" : "Aberta"
+  );
   header.append(titleLink, badge);
 
-  const date = document.createElement("p");
-  date.className = "small text-secondary mt-3 mb-0";
-  date.textContent = `Encerra em ${formatDateTime(poll.endsAt)}`;
+  const date = createElement("p", "small text-secondary mt-3 mb-0", `Encerra em ${formatDateTime(poll.endsAt)}`);
 
-  const detailsLink = document.createElement("a");
-  detailsLink.className = "small fw-semibold d-inline-block mt-3";
+  const detailsLink = createElement("a", "small fw-semibold d-inline-block mt-3", "Ver detalhes");
   detailsLink.href = titleLink.href;
-  detailsLink.textContent = "Ver detalhes";
 
   card.append(header, date, detailsLink);
+
+  if (isCreator(poll)) {
+    if (canManage(poll)) {
+      const actions = createElement("div", "d-flex flex-wrap gap-2 mt-3");
+      actions.append(actionButton("Editar", "btn-outline-primary", () => openEditModal(poll)));
+      actions.append(actionButton("Encerrar", "btn-outline-secondary", () => closePoll(poll)));
+      actions.append(actionButton("Excluir", "btn-outline-danger", () => deletePoll(poll)));
+      card.append(actions);
+    } else {
+      card.append(createElement("p", "small text-secondary mt-3 mb-0", managementReason(poll)));
+    }
+  }
+
   column.append(card);
   return column;
 }
 
 async function loadPolls() {
   list.replaceChildren();
-  const loading = document.createElement("div");
-  loading.className = "col-12";
-  loading.textContent = "Carregando enquetes...";
+  const loading = createElement("div", "col-12", "Carregando enquetes...");
   list.append(loading);
 
   try {
     const polls = await apiFetch("/polls");
     list.replaceChildren();
+
+    const editId = new URLSearchParams(window.location.search).get("edit");
+    if (editId) {
+      const poll = polls.find((item) => String(item.id) === editId);
+      if (poll && isCreator(poll) && canManage(poll)) {
+        openEditModal(poll);
+      } else {
+        showAlert(listAlert, "Não foi possível editar esta enquete.");
+      }
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+
     if (polls.length === 0) {
-      const empty = document.createElement("div");
-      empty.className = "col-12 text-secondary";
-      empty.textContent = "Nenhuma enquete por enquanto.";
-      list.append(empty);
+      list.append(createElement("div", "col-12 text-secondary", "Nenhuma enquete por enquanto."));
       return;
     }
     polls.forEach((poll) => list.append(renderPoll(poll)));
   } catch (error) {
     list.replaceChildren();
-    showAlert(listAlert, error.message ?? "Não foi possível carregar as enquetes.");
+    showAlert(listAlert, apiMessage(error, "Não foi possível carregar as enquetes."));
   }
 }
 
-newPollButton.addEventListener("click", () => {
-  clearFormErrors();
-  fields.endsAt.min = toDateTimeLocal(new Date());
-});
+newPollButton.addEventListener("click", resetCreateModal);
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -142,29 +227,37 @@ form.addEventListener("submit", async (event) => {
     return;
   }
 
+  const body = JSON.stringify({
+    optionA: fields.optionA.value.trim(),
+    optionB: fields.optionB.value.trim(),
+    endsAt: new Date(fields.endsAt.value).toISOString()
+  });
+
   submitButton.disabled = true;
   try {
-    await apiFetch("/polls", {
-      method: "POST",
-      body: JSON.stringify({
-        optionA: fields.optionA.value.trim(),
-        optionB: fields.optionB.value.trim(),
-        endsAt: new Date(fields.endsAt.value).toISOString()
-      })
-    });
+    if (editingPollId !== null) {
+      await apiFetch(`/polls/${editingPollId}`, { method: "PUT", body });
+      showAlert(listAlert, "Enquete atualizada com sucesso.", "success");
+    } else {
+      await apiFetch("/polls", { method: "POST", body });
+      showAlert(listAlert, "Enquete criada com sucesso.", "success");
+    }
     modal.hide();
-    form.reset();
-    fields.endsAt.min = toDateTimeLocal(new Date());
-    showAlert(listAlert, "Enquete criada com sucesso.", "success");
     await loadPolls();
   } catch (error) {
     const fieldErrors = error.payload?.fieldErrors ?? {};
     Object.entries(fieldErrors).forEach(([name, message]) => setFieldError(name, message));
-    showAlert(formAlert, error.message ?? "Não foi possível criar a enquete.");
+    showAlert(formAlert, apiMessage(error, "Não foi possível salvar a enquete."));
   } finally {
     submitButton.disabled = false;
   }
 });
+
+const flash = sessionStorage.getItem("census.flash");
+if (flash) {
+  sessionStorage.removeItem("census.flash");
+  showAlert(listAlert, flash, "success");
+}
 
 fields.endsAt.min = toDateTimeLocal(new Date());
 loadPolls();

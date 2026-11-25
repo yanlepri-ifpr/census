@@ -49,9 +49,19 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.UNAUTHORIZED, "Não autorizado", ex.getMessage(), request, Map.of());
     }
 
+    @ExceptionHandler(PollForbiddenException.class)
+    public ResponseEntity<ApiError> handlePollForbidden(PollForbiddenException ex, HttpServletRequest request) {
+        return build(HttpStatus.FORBIDDEN, "Sem permissão", ex.getMessage(), request, Map.of());
+    }
+
     @ExceptionHandler(PollNotFoundException.class)
     public ResponseEntity<ApiError> handlePollNotFound(PollNotFoundException ex, HttpServletRequest request) {
         return build(HttpStatus.NOT_FOUND, "Não encontrado", ex.getMessage(), request, Map.of());
+    }
+
+    @ExceptionHandler(PollConflictException.class)
+    public ResponseEntity<ApiError> handlePollConflict(PollConflictException ex, HttpServletRequest request) {
+        return build(HttpStatus.CONFLICT, "Conflito", ex.getMessage(), request, Map.of());
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
