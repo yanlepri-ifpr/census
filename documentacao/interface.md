@@ -88,7 +88,7 @@ Bootstrap 5 fornece grid, botões, formulários, card, badge, alerta, modal e pr
 - Em `401` de rota protegida, limpar a sessão local; o logout remove token e dados do usuário.
 - Ações do criador usam confirmação; após redirecionamento, a mensagem de sucesso é transportada por `census.flash`.
 - Modal com `Esc` para fechar e clique no backdrop.
-- Datas em `pt-BR` em `America/Sao_Paulo`.
+- Datas em `pt-BR` em `America/Sao_Paulo`; páginas declaram `lang="pt-BR"` e alertas dinâmicos usam `aria-live="polite"`.
 - Texto de opções via `textContent`; nunca `innerHTML` com dados de usuário.
 - Sem tema escuro, sem animações longas e sem frameworks adicionais além do Bootstrap 5.
 
@@ -96,6 +96,7 @@ Bootstrap 5 fornece grid, botões, formulários, card, badge, alerta, modal e pr
 
 - Layout desktop a partir de 1200px; grid de 2 e 3 colunas; sem adaptação para celular.
 - Botões e campos com área clicável ampla; modal até 560px; sem rolagem horizontal.
+- Validação final em 1200×800 e 1366×768 com Chromium headless: três colunas `col-xl-4`, `scrollWidth` dentro da janela e cards renderizados via API real; checklist completo no `README.md`.
 
 ## Mensagens principais
 

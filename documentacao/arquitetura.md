@@ -74,5 +74,5 @@ Rotas já implementadas: `GET /api/polls` e `GET /api/polls/{id}` (públicas), `
 - Resultados usam `GET /api/polls/{id}/results` com rota pública e verificação no service: antes do encerramento exige voto do usuário, depois fica disponível a qualquer visitante; sem permissão retorna `403` padronizado (RF09, RF11, RNF14).
 - Services concentram as regras de negócio, enquanto a apresentação permanece fina.
 - JWT stateless e same-origin, sem papéis de usuário (RNF05, RNF06).
-- Status derivado no lugar de agendador e constraint única para integridade do voto (RF10, RNF12).
+- Status derivado no lugar de agendador: `closedAt` só é preenchido no encerramento manual e permanece nulo quando `now >= endsAt`; a mesma regra libera resultados e bloqueia voto e gestão (RF10, RF11, RNF12, RNF13).
 - Frontend modular com Bootstrap 5 via CDN, consumindo apenas a API real (RNF02, RNF18).
