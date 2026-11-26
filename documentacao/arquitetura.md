@@ -35,7 +35,7 @@ O frontend é modular e usa Bootstrap 5 como framework CSS. O JavaScript da apli
 
 Fluxo típico: evento do usuário → módulo da feature → integração com a API → backend → resposta → módulo da feature → apresentação.
 
-Módulos atuais: `auth.js` para sessão, `api.js` para HTTP, `ui.js` para formatação de datas, `register.js`, `login.js`, `polls.js` (lista) e `poll.js` (detalhe) para as telas.
+Módulos atuais: `auth.js` para sessão, `api.js` para HTTP, `ui.js` para formatação de datas e percentuais, `register.js`, `login.js`, `polls.js` (lista) e `poll.js` (detalhe, voto e resultados) para as telas.
 
 ## Comunicação entre as aplicações
 
@@ -51,7 +51,7 @@ O `docker-compose.yml` sobe o PostgreSQL 16 com healthcheck e volume nomeado. As
 
 Três conceitos sustentam o domínio: usuário, enquete e voto. O usuário pode criar enquetes e votar. A enquete pertence a um criador, apresenta duas opções e possui um prazo. O voto liga um usuário a uma enquete e é único por participante. O status da enquete é uma visão derivada, não um estado persistido separadamente.
 
-Rotas já implementadas: `GET /api/polls` e `GET /api/polls/{id}` (públicas), `POST /api/polls` (autenticada), `PUT /api/polls/{id}`, `DELETE /api/polls/{id}` e `PATCH /api/polls/{id}/close` (criador), `POST /api/polls/{id}/votes` (autenticada), `POST /api/auth/register` (pública), `POST /api/auth/login` (pública) e `GET /api/auth/me` (protegida). Criação e listagem usam `Poll`, `PollRepository`, `CreatePollRequest`, `PollSummaryResponse` e `PollService`; edição usa `UpdatePollRequest` e o detalhe usa `PollDetailsResponse`. Resumo e detalhe expõem `createdById`, `hasVotes` e `hasVoted`; o detalhe também expõe `votedOption` para a interface destacar a escolha. O voto usa `Vote`, `VoteRepository`, `VoteController`, `VoteService`, `VoteRequest` e `VoteResultResponse`, com `uk_votes_poll_user` como última barreira contra duplicidade. Qualquer autenticado cria e vota, sem papel de administrador. Enquete inexistente retorna `404`, outro usuário retorna `403`, operação inválida ou voto repetido retornam `409`, todos padronizados. O login gera um JWT HS256 com claims `sub`, `userId`, `iat` e `exp`, sem claim de papel. A lista completa está nos casos de uso. Os atributos e as constraints acompanham a implementação.
+Rotas já implementadas: `GET /api/polls` e `GET /api/polls/{id}` (públicas), `POST /api/polls` (autenticada), `PUT /api/polls/{id}`, `DELETE /api/polls/{id}` e `PATCH /api/polls/{id}/close` (criador), `POST /api/polls/{id}/votes` (autenticada), `GET /api/polls/{id}/results` (condicional), `POST /api/auth/register` (pública), `POST /api/auth/login` (pública) e `GET /api/auth/me` (protegida). Criação e listagem usam `Poll`, `PollRepository`, `CreatePollRequest`, `PollSummaryResponse` e `PollService`; edição usa `UpdatePollRequest` e o detalhe usa `PollDetailsResponse`. Resumo e detalhe expõem `createdById`, `hasVotes` e `hasVoted`; o detalhe também expõe `votedOption` para a interface destacar a escolha. O voto usa `Vote`, `VoteRepository`, `VoteController`, `VoteService`, `VoteRequest` e `VoteResultResponse`, com `uk_votes_poll_user` como última barreira contra duplicidade. Resultados reusam `VoteResultResponse` em `ResultsController` e `VoteService`, com `403` padronizado antes do voto e fora do encerramento. Qualquer autenticado cria e vota, sem papel de administrador. Enquete inexistente retorna `404`, outro usuário retorna `403`, operação inválida ou voto repetido retornam `409`, todos padronizados. O login gera um JWT HS256 com claims `sub`, `userId`, `iat` e `exp`, sem claim de papel. A lista completa está nos casos de uso. Os atributos e as constraints acompanham a implementação.
 
 ## Padrões de nomenclatura
 
@@ -71,6 +71,7 @@ Rotas já implementadas: `GET /api/polls` e `GET /api/polls/{id}` (públicas), `
 - Listagem e detalhe são públicos e sem paginação: a lista devolve resumo e o detalhe acrescenta criador e datas, ambos com status derivado (RF04, RF11, RNF20).
 - Gestão usa autoria, enquete aberta e zero votos antes de editar, excluir ou encerrar; o frontend esconde as ações do não-criador e explica o bloqueio quando houver votos ou encerramento (RF05, RF06, RF07, RF11, RF12, RF13, RNF14).
 - Voto usa DTO com `option` restrita a A/B, service verifica enquete aberta e ausência de voto do usuário, e `saveAndFlush` converte violação da constraint única em `409`; o detalhe devolve `hasVoted` e `votedOption` para bloquear a interface (RF08, RF12, RF13, RNF12, RNF14).
+- Resultados usam `GET /api/polls/{id}/results` com rota pública e verificação no service: antes do encerramento exige voto do usuário, depois fica disponível a qualquer visitante; sem permissão retorna `403` padronizado (RF09, RF11, RNF14).
 - Services concentram as regras de negócio, enquanto a apresentação permanece fina.
 - JWT stateless e same-origin, sem papéis de usuário (RNF05, RNF06).
 - Status derivado no lugar de agendador e constraint única para integridade do voto (RF10, RNF12).

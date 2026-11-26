@@ -5,4 +5,8 @@ public class PollForbiddenException extends RuntimeException {
     public PollForbiddenException() {
         super("Somente o criador pode executar esta ação.");
     }
+
+    public PollForbiddenException(String message) {
+        super(message);
+    }
 }

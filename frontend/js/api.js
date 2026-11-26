@@ -5,7 +5,12 @@ export const API_BASE = "/api";
 function isPublicRoute(path, method) {
   const cleanPath = path.split("?")[0];
   if (method === "POST" && (cleanPath === "/auth/register" || cleanPath === "/auth/login")) return true;
-  if (method === "GET" && (cleanPath === "/polls" || /^\/polls\/[^/]+$/.test(cleanPath))) return true;
+  if (
+    method === "GET" &&
+    (cleanPath === "/polls" || /^\/polls\/[^/]+$/.test(cleanPath) || /^\/polls\/[^/]+\/results$/.test(cleanPath))
+  ) {
+    return true;
+  }
   return false;
 }
 

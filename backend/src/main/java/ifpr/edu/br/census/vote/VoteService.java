@@ -3,6 +3,7 @@ package ifpr.edu.br.census.vote;
 import ifpr.edu.br.census.common.InvalidCredentialsException;
 import ifpr.edu.br.census.common.InvalidVoteOptionException;
 import ifpr.edu.br.census.common.PollConflictException;
+import ifpr.edu.br.census.common.PollForbiddenException;
 import ifpr.edu.br.census.common.PollNotFoundException;
 import ifpr.edu.br.census.poll.Poll;
 import ifpr.edu.br.census.poll.PollRepository;
@@ -44,6 +45,30 @@ public class VoteService {
             throw new PollConflictException("Você já votou nesta enquete.");
         }
 
+        return countResults(pollId);
+    }
+
+    @Transactional(readOnly = true)
+    public VoteResultResponse results(Long pollId, String email) {
+        Poll poll = pollRepository.findById(pollId).orElseThrow(PollNotFoundException::new);
+
+        if (!poll.isClosed() && !hasVoted(pollId, email)) {
+            throw new PollForbiddenException("Vote para ver os resultados.");
+        }
+
+        return countResults(pollId);
+    }
+
+    private boolean hasVoted(Long pollId, String email) {
+        if (email == null) {
+            return false;
+        }
+        return userRepository.findByEmail(email)
+            .map(voter -> voteRepository.existsByPollIdAndUserId(pollId, voter.getId()))
+            .orElse(false);
+    }
+
+    private VoteResultResponse countResults(Long pollId) {
         return VoteResultResponse.from(
             voteRepository.countByPollIdAndOption(pollId, VoteOption.A),
             voteRepository.countByPollIdAndOption(pollId, VoteOption.B)

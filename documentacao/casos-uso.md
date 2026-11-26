@@ -45,8 +45,8 @@
 
 - **Atores:** Visitante, Usuário. **Requisitos:** RF09, RF10.
 - **Pré-condição:** enquete existente.
-- **Fluxo principal:** frontend chama `GET /api/polls/{id}/results` → backend libera se encerrada ou se o usuário já votou → retorna contagens e percentuais → frontend mostra barras e texto.
-- **Exceções:** resultados indisponíveis retornam `403`; enquete inexistente retorna `404`; falha de rede permite nova tentativa.
+- **Fluxo principal:** frontend chama `GET /api/polls/{id}/results` → backend libera se encerrada ou se o usuário já votou → retorna contagens e percentuais com uma casa decimal → frontend mostra barras e texto, inclusive para visitante após o encerramento.
+- **Exceções:** resultados indisponíveis retornam `403` com “Vote para ver os resultados.”; enquete inexistente retorna `404`; falha de rede permite nova tentativa.
 - **Pós-condição:** nenhuma alteração de estado.
 
 ## UC07: Usuário edita enquete

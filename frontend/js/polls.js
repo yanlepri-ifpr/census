@@ -100,6 +100,12 @@ function actionButton(label, className, onClick) {
   return button;
 }
 
+function resultsLink(href) {
+  const link = createElement("a", "small fw-semibold d-inline-block mt-2", "Ver resultados");
+  link.href = href;
+  return link;
+}
+
 function openEditModal(poll) {
   editingPollId = poll.id;
   modalTitle.textContent = "Editar enquete";
@@ -170,6 +176,7 @@ function renderPoll(poll) {
   if (poll.status === "OPEN") {
     if (poll.hasVoted) {
       card.append(createElement("p", "small fw-semibold text-success mt-2 mb-0", "Você votou nesta enquete."));
+      card.append(resultsLink(titleLink.href));
     } else if (isAuthenticated()) {
       const voteLink = createElement("a", "small fw-semibold d-inline-block mt-2", "Votar");
       voteLink.href = titleLink.href;
@@ -179,6 +186,8 @@ function renderPoll(poll) {
       loginLink.href = "/login.html";
       card.append(loginLink);
     }
+  } else {
+    card.append(resultsLink(titleLink.href));
   }
 
   if (isCreator(poll)) {

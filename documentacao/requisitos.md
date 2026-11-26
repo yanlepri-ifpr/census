@@ -14,7 +14,7 @@ Os casos de uso em `casos-uso.md` referenciam os IDs abaixo.
 | RF06 | Excluir enquete | Criador exclui se estiver aberta e sem votos. |
 | RF07 | Encerrar antecipadamente | Criador encerra se estiver aberta e sem votos; resultados viram públicos. |
 | RF08 | Votar | Usuário autenticado vota uma vez em A ou B; voto imutável e sinalizado na API. |
-| RF09 | Ver resultados | Usuário vê após votar; todos veem após o encerramento. |
+| RF09 | Ver resultados | `GET /api/polls/{id}/results`: usuário vê após votar; todos veem após o encerramento. |
 | RF10 | Encerramento automático | Enquete fica `CLOSED` quando `now >= endsAt`, sem scheduler. |
 | RF11 | Status | API e interface exibem `OPEN`/`CLOSED` de forma consistente. |
 | RF12 | Validações e erros | Entradas validadas e mensagens claras, com códigos HTTP adequados. |

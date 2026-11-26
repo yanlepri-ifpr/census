@@ -126,6 +126,32 @@ function renderResults(result) {
   results.append(section);
 }
 
+function showResultsMessage(message) {
+  results.replaceChildren();
+  results.append(createElement("div", "alert alert-secondary", message));
+}
+
+async function loadResults() {
+  results.replaceChildren();
+
+  if (currentPoll.status !== "CLOSED" && !currentPoll.hasVoted) {
+    showResultsMessage("Vote para ver os resultados.");
+    return;
+  }
+
+  results.append(createElement("div", "text-secondary", "Carregando resultados..."));
+  try {
+    const result = await apiFetch(`/polls/${currentPoll.id}/results`);
+    renderResults(result);
+  } catch (error) {
+    if (error.status === 403) {
+      showResultsMessage("Vote para ver os resultados.");
+      return;
+    }
+    showResultsMessage(apiMessage(error, "Não foi possível carregar os resultados."));
+  }
+}
+
 async function submitVote(option, buttons) {
   buttons.forEach((button) => {
     button.disabled = true;
@@ -133,7 +159,7 @@ async function submitVote(option, buttons) {
   hideAlert();
 
   try {
-    const result = await apiFetch(`/polls/${currentPoll.id}/votes`, {
+    await apiFetch(`/polls/${currentPoll.id}/votes`, {
       method: "POST",
       body: JSON.stringify({ option })
     });
@@ -144,7 +170,7 @@ async function submitVote(option, buttons) {
     renderHeaderAndOptions(currentPoll);
     renderVoting(currentPoll);
     renderManagement(currentPoll);
-    renderResults(result);
+    await loadResults();
   } catch (error) {
     if (error.status === 409 && String(error.message).includes("já votou")) {
       currentPoll.hasVotes = true;
@@ -249,12 +275,13 @@ function renderHeaderAndOptions(poll) {
   details.replaceChildren(header, meta, optionsTitle, options);
 }
 
-function renderPoll(poll) {
+async function renderPoll(poll) {
   currentPoll = poll;
   results.replaceChildren();
   renderHeaderAndOptions(poll);
   renderVoting(poll);
   renderManagement(poll);
+  await loadResults();
 }
 
 function renderInvalidId() {
@@ -275,7 +302,7 @@ async function loadPoll() {
 
   try {
     const poll = await apiFetch(`/polls/${encodeURIComponent(id)}`);
-    renderPoll(poll);
+    await renderPoll(poll);
   } catch (error) {
     details.replaceChildren();
     voting.replaceChildren();
